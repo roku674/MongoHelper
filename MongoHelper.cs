@@ -41,10 +41,11 @@ namespace Optimization.Repository
         /// <param name="username"></param>
         /// <param name="password"></param>
         /// <param name="cluster"></param>
+        /// <param name="region">I have no idea if it's actually the region its just an assumption but its different on like all my databases</param>
         /// <returns>mongo helper</returns>
-        public static IMongoHelper MongoHelperConnector(IMongoHelper mongoHelper, string dbName, string username, string password, string cluster)
+        public static IMongoHelper MongoHelperConnector(IMongoHelper mongoHelper, string dbName, string username, string password, string cluster, string region)
         {
-            string connectionString = ConnectionStringBuilder(username, password, cluster);
+            string connectionString = ConnectionStringBuilder(username, password, cluster, region);
 
             mongoHelper.database = mongoHelper.CreateMongoDbInstance(dbName, connectionString);
             try
@@ -67,13 +68,14 @@ namespace Optimization.Repository
         /// <param name="username"></param>
         /// <param name="password"></param>
         /// <param name="cluster"></param>
+        /// <param name="region">I have no idea if it's actually the region its just an assumption but its different on like all my databases</param>
         /// <returns></returns>
-        public static string ConnectionStringBuilder(string username, string password, string cluster)
+        public static string ConnectionStringBuilder(string username, string password, string cluster,string region)
         {
             string encodedPassword = System.Net.WebUtility.UrlEncode(password);
 
             //string connectionString = $"mongodb+srv://{username}:{encodedPassword}@{cluster}.vc4onns.mongodb.net/?retryWrites=true&w=majority";
-            string connectionString = $"mongodb+srv://{username}:{encodedPassword}@{cluster}.vpazkca.mongodb.net/?retryWrites=true&w=majority";
+            string connectionString = $"mongodb+srv://{username}:{encodedPassword}@{cluster}.{region}.mongodb.net/?retryWrites=true&w=majority";
             return connectionString;
         }
 
