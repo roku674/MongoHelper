@@ -110,37 +110,37 @@ namespace Optimization.Repository
             }
         }
 
-        public async Task<List<T>> GetAllDocumentsAsync<T>(string dbName, string collectionName)
+        public async Task<List<T>> GetAllDocumentsAsync<T>(string collectionName)
         {
-            IMongoCollection<T> collection = GetCollection<T>(dbName, collectionName);
+            IMongoCollection<T> collection = GetCollection<T>(collectionName);
             return await collection.Find(x => true).ToListAsync();
         }
 
-        public async Task<List<T>> GetFilteredDocumentsAsync<T>(string dbName, string collectionName, FilterDefinition<T> filter)
+        public async Task<List<T>> GetFilteredDocumentsAsync<T>(string collectionName, FilterDefinition<T> filter)
         {
-            return await GetCollection<T>(dbName, collectionName).Find(filter).ToListAsync();
+            return await GetCollection<T>(collectionName).Find(filter).ToListAsync();
         }
 
-        public async Task UpdateDocumentAsync<T>(string dbName, string collectionName, FilterDefinition<T> filter, T document)
+        public async Task UpdateDocumentAsync<T>(string collectionName, FilterDefinition<T> filter, T document)
         {
-            await GetCollection<T>(dbName, collectionName).ReplaceOneAsync(filter, document);
+            await GetCollection<T>(collectionName).ReplaceOneAsync(filter, document);
         }
-        public async Task UpdateDocumentAsync<T>(string dbName, string collectionName, FilterDefinition<T> filter, UpdateDefinition<T> document)
+        public async Task UpdateDocumentAsync<T>(string collectionName, FilterDefinition<T> filter, UpdateDefinition<T> document)
         {
-            await GetCollection<T>(dbName, collectionName).UpdateOneAsync(filter, document);
-        }
-
-        public async Task CreateDocumentAsync<T>(string dbName, string collectionName, T document)
-        {
-            await GetCollection<T>(dbName, collectionName).InsertOneAsync(document);
+            await GetCollection<T>(collectionName).UpdateOneAsync(filter, document);
         }
 
-        public async Task DeleteDocumentAsync<T>(string dbName, string collectionName, FilterDefinition<T> filter)
+        public async Task CreateDocumentAsync<T>(string collectionName, T document)
         {
-            await GetCollection<T>(dbName, collectionName).DeleteOneAsync(filter);
+            await GetCollection<T>(collectionName).InsertOneAsync(document);
         }
 
-        private IMongoCollection<T> GetCollection<T>(string dbName, string collectionName)
+        public async Task DeleteDocumentAsync<T>(string collectionName, FilterDefinition<T> filter)
+        {
+            await GetCollection<T>(collectionName).DeleteOneAsync(filter);
+        }
+
+        private IMongoCollection<T> GetCollection<T>(string collectionName)
         {
             return database.GetCollection<T>(collectionName);
         }
