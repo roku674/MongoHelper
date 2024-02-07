@@ -1,3 +1,6 @@
+//Copyright © 2023 Mandala Consulting, LLC MIT License
+//Created by Alexander Fields
+
 using MongoDB.Driver;
 using Optimization.Logging;
 using System.Collections.Generic;
@@ -10,7 +13,7 @@ namespace Optimization.Repository
     /// </summary>
     public class MongoHelper : IMongoHelper
     {
-        public static List<LogMessage> mongoLogs = new List<LogMessage>();
+        private static List<LogMessage> mongoLogs = new List<LogMessage>();
         public static event System.EventHandler<LogMessageEventArgs> LogAdded;
         public static event System.EventHandler LogCleared;
 
@@ -150,7 +153,7 @@ namespace Optimization.Repository
             return database.GetCollection<T>(collectionName);
         }
 
-         public static void AddLog(LogMessage logMessage)
+        public static void AddLog(LogMessage logMessage)
         {
             mongoLogs.Add(logMessage);
             LogAdded?.Invoke(null, new LogMessageEventArgs(logMessage));
@@ -162,5 +165,9 @@ namespace Optimization.Repository
             LogCleared?.Invoke(null, System.EventArgs.Empty);
         }
 
+        public static List<LogMessage> GetLogs()
+        {
+            return mongoLogs;
+        }
     }
 }
