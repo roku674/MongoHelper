@@ -1,4 +1,5 @@
 using MongoDB.Driver;
+using Optimization.Logging;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -9,6 +10,10 @@ namespace Optimization.Repository
     /// </summary>
     public class MongoHelper : IMongoHelper
     {
+        public static List<LogMessage> mongoLogs = new List<LogMessage>();
+        public static event System.EventHandler<LogMessageEventArgs> LogAdded;
+        public static event System.EventHandler LogCleared;
+
         public IMongoDatabase database { get; set; }
 
         public string dbName { get; set; }
@@ -54,7 +59,7 @@ namespace Optimization.Repository
             }
             catch (System.Exception theseHands)
             {
-                System.Console.WriteLine(theseHands.ToString());
+                AddLog(LogMessage.Error(theseHands.Message));
             }
 
             mongoHelper.dbName = dbName;
@@ -105,7 +110,7 @@ namespace Optimization.Repository
             }
             catch (System.Exception e)
             {
-                System.Console.WriteLine("Was unable to properly connect to the database!" + e);
+                AddLog(LogMessage.Error("Was unable to properly connect to the database!" + e.ToString()));
                 return null;
             }
         }
@@ -143,6 +148,18 @@ namespace Optimization.Repository
         private IMongoCollection<T> GetCollection<T>(string collectionName)
         {
             return database.GetCollection<T>(collectionName);
+        }
+
+         public static void AddLog(LogMessage logMessage)
+        {
+            mongoLogs.Add(logMessage);
+            LogAdded?.Invoke(null, new LogMessageEventArgs(logMessage));
+        }
+
+        public static void ClearLogs()
+        {
+            mongoLogs.Clear();
+            LogCleared?.Invoke(null, System.EventArgs.Empty);
         }
 
     }
