@@ -165,6 +165,42 @@ namespace Optimization.Repository
             LogCleared?.Invoke(null, System.EventArgs.Empty);
         }
 
+        /// <summary>
+        /// Get the id for when you don't have an object class
+        /// </summary>
+        /// <returns>A string</returns>
+        public static object GetIdFromDynamicObject(dynamic obj)
+    {
+        Type typeInfo = obj.GetType();
+        PropertyInfo idProperty = typeInfo.GetProperty("_id");
+
+        if (idProperty != null)
+        {
+            return idProperty.GetValue(obj, null);
+        }
+
+        return null;
+    }
+}
+        /// <summary>
+        /// Get the id for when you don't have an object class
+        /// </summary>
+        /// <returns>A string</returns>
+        public static string GetIdFromDynamicObject(dynamic obj)
+    {
+        Type typeInfo = obj.GetType();
+        PropertyInfo idProperty = typeInfo.GetProperty("_id");
+
+        if (idProperty != null)
+        {
+            string idValue = (string)idProperty.GetValue(obj, null);
+            return idValue;
+        }
+
+        return null;
+    }
+}
+
         public static List<LogMessage> GetLogs()
         {
             return mongoLogs;
