@@ -196,10 +196,12 @@ namespace Optimization.Repository
         /// <summary>
         /// Get the id for when you don't have an object class
         /// </summary>
-        /// <returns>A string</returns>
-        public static object GetIdFromDynAsObj(dynamic obj)
+        /// <typeparam name="T"></typeparam>
+        /// <param name="obj"></param>
+        /// <returns>object</returns>
+        public static object GetIdFromObj<T>(T obj)
         {
-            System.Type typeInfo = obj.GetType();
+            System.Type typeInfo = typeof(T);
             PropertyInfo idProperty = typeInfo.GetProperty("_id");
 
             if (idProperty != null)
@@ -213,10 +215,12 @@ namespace Optimization.Repository
         /// <summary>
         /// Get the id for when you don't have an object class
         /// </summary>
-        /// <returns>A string</returns>
-        public static string GetIdFromDynAsStr(dynamic obj)
+        /// <typeparam name="T"></typeparam>
+        /// <param name="obj"></param>
+        /// <returns>object</returns>
+        public static string GetIdFromObjAsString<T>(T obj)
         {
-            System.Type typeInfo = obj.GetType();
+            System.Type typeInfo = typeof(T);
             PropertyInfo idProperty = typeInfo.GetProperty("_id");
 
             if (idProperty != null)
