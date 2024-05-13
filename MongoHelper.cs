@@ -148,22 +148,22 @@ namespace Optimization.Repository
             return await GetCollection<T>(collectionName).Find(filter).ToListAsync();
         }
 
-        public async Task UpdateDocumentAsync<T>(
+        public async Task<ReplaceOneResult> ReplaceDocumentAsync<T>(
             string collectionName,
             FilterDefinition<T> filter,
             T document
         )
         {
-            await GetCollection<T>(collectionName).ReplaceOneAsync(filter, document);
+            return await GetCollection<T>(collectionName).ReplaceOneAsync(filter, document);
         }
 
-        public async Task UpdateDocumentAsync<T>(
+        public async Task<UpdateResult> UpdateDocumentAsync<T>(
             string collectionName,
             FilterDefinition<T> filter,
             UpdateDefinition<T> document
         )
         {
-            await GetCollection<T>(collectionName).UpdateOneAsync(filter, document);
+            return await GetCollection<T>(collectionName).UpdateOneAsync(filter, document);
         }
 
         public async Task CreateDocumentAsync<T>(string collectionName, T document)
@@ -171,9 +171,9 @@ namespace Optimization.Repository
             await GetCollection<T>(collectionName).InsertOneAsync(document);
         }
 
-        public async Task DeleteDocumentAsync<T>(string collectionName, FilterDefinition<T> filter)
+        public async Task<DeleteResult> DeleteDocumentAsync<T>(string collectionName, FilterDefinition<T> filter)
         {
-            await GetCollection<T>(collectionName).DeleteOneAsync(filter);
+            return await GetCollection<T>(collectionName).DeleteOneAsync(filter);
         }
 
         private IMongoCollection<T> GetCollection<T>(string collectionName)
@@ -181,7 +181,7 @@ namespace Optimization.Repository
             return database.GetCollection<T>(collectionName);
         }
 
-        public static void AddLog(LogMessage logMessage)
+        protected static void AddLog(LogMessage logMessage)
         {
             mongoLogs.Add(logMessage);
             LogAdded?.Invoke(null, new LogMessageEventArgs(logMessage));

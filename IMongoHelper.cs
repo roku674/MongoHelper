@@ -47,7 +47,7 @@ namespace Optimization.Repository
         /// <param name="collectionName"></param>
         /// <param name="filter"></param>
         /// <returns></returns>
-        Task DeleteDocumentAsync<T>(string collectionName, FilterDefinition<T> filter);
+        Task<DeleteResult> DeleteDocumentAsync<T>(string collectionName, FilterDefinition<T> filter);
         
         /// <summary>
         /// Get All documents in collection
@@ -80,7 +80,7 @@ namespace Optimization.Repository
         /// <param name="filter"></param>
         /// <param name="document"></param>
         /// <returns></returns>
-        Task UpdateDocumentAsync<T>(string collectionName, FilterDefinition<T> filter, T document);
+        Task<UpdateResult> ReplaceDocumentAsync<T>(string collectionName, FilterDefinition<T> filter, T document);
         /// <summary>
         /// Updates a document
         /// </summary>
@@ -89,6 +89,6 @@ namespace Optimization.Repository
         /// <param name="filter"></param>
         /// <param name="updateDefinition"></param>
         /// <returns></returns>
-        Task UpdateDocumentAsync<T>(string collectionName, FilterDefinition<T> filter, UpdateDefinition<T> updateDefinition);
+        Task<UpdateResult> UpdateDocumentAsync<T>(string collectionName, FilterDefinition<T> filter, UpdateDefinition<T> updateDefinition);
     }
 }
