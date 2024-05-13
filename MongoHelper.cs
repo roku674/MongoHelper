@@ -1,15 +1,17 @@
+using System.Collections.Generic;
+using System.Reflection;
+using System.Security.AccessControl;
+using System.Threading.Tasks;
 //Copyright © 2023 Mandala Consulting, LLC MIT License
 //Created by Alexander Fields
-
+using MongoDB.Bson;
 using MongoDB.Driver;
 using Optimization.Logging;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Optimization.Repository
 {
     /// <summary>
-    /// Make sure you set the MongoDB Instance before calling the classes in this 
+    /// Make sure you set the MongoDB Instance before calling the classes in this
     /// </summary>
     public class MongoHelper : IMongoHelper
     {
@@ -24,10 +26,7 @@ namespace Optimization.Repository
         /// <summary>
         /// default Constrcutor
         /// </summary>
-        public MongoHelper()
-        {
-
-        }
+        public MongoHelper() { }
 
         /// <summary>
         /// Constructor that will get Database
@@ -51,7 +50,14 @@ namespace Optimization.Repository
         /// <param name="cluster"></param>
         /// <param name="region">I have no idea if it's actually the region its just an assumption but its different on like all my databases</param>
         /// <returns>mongo helper</returns>
-        public static IMongoHelper MongoHelperConnector(IMongoHelper mongoHelper, string dbName, string username, string password, string cluster, string region)
+        public static IMongoHelper MongoHelperConnector(
+            IMongoHelper mongoHelper,
+            string dbName,
+            string username,
+            string password,
+            string cluster,
+            string region
+        )
         {
             string connectionString = ConnectionStringBuilder(username, password, cluster, region);
 
@@ -78,12 +84,18 @@ namespace Optimization.Repository
         /// <param name="cluster"></param>
         /// <param name="region">I have no idea if it's actually the region its just an assumption but its different on like all my databases</param>
         /// <returns></returns>
-        public static string ConnectionStringBuilder(string username, string password, string cluster,string region)
+        public static string ConnectionStringBuilder(
+            string username,
+            string password,
+            string cluster,
+            string region
+        )
         {
             string encodedPassword = System.Net.WebUtility.UrlEncode(password);
 
             //string connectionString = $"mongodb+srv://{username}:{encodedPassword}@{cluster}.vc4onns.mongodb.net/?retryWrites=true&w=majority";
-            string connectionString = $"mongodb+srv://{username}:{encodedPassword}@{cluster}.{region}.mongodb.net/?retryWrites=true&w=majority";
+            string connectionString =
+                $"mongodb+srv://{username}:{encodedPassword}@{cluster}.{region}.mongodb.net/?retryWrites=true&w=majority";
             return connectionString;
         }
 
@@ -113,7 +125,11 @@ namespace Optimization.Repository
             }
             catch (System.Exception e)
             {
-                AddLog(LogMessage.Error("Was unable to properly connect to the database!" + e.ToString()));
+                AddLog(
+                    LogMessage.Error(
+                        "Was unable to properly connect to the database!" + e.ToString()
+                    )
+                );
                 return null;
             }
         }
@@ -124,16 +140,28 @@ namespace Optimization.Repository
             return await collection.Find(x => true).ToListAsync();
         }
 
-        public async Task<List<T>> GetFilteredDocumentsAsync<T>(string collectionName, FilterDefinition<T> filter)
+        public async Task<List<T>> GetFilteredDocumentsAsync<T>(
+            string collectionName,
+            FilterDefinition<T> filter
+        )
         {
             return await GetCollection<T>(collectionName).Find(filter).ToListAsync();
         }
 
-        public async Task UpdateDocumentAsync<T>(string collectionName, FilterDefinition<T> filter, T document)
+        public async Task UpdateDocumentAsync<T>(
+            string collectionName,
+            FilterDefinition<T> filter,
+            T document
+        )
         {
             await GetCollection<T>(collectionName).ReplaceOneAsync(filter, document);
         }
-        public async Task UpdateDocumentAsync<T>(string collectionName, FilterDefinition<T> filter, UpdateDefinition<T> document)
+
+        public async Task UpdateDocumentAsync<T>(
+            string collectionName,
+            FilterDefinition<T> filter,
+            UpdateDefinition<T> document
+        )
         {
             await GetCollection<T>(collectionName).UpdateOneAsync(filter, document);
         }
@@ -169,37 +197,36 @@ namespace Optimization.Repository
         /// Get the id for when you don't have an object class
         /// </summary>
         /// <returns>A string</returns>
-        public static object GetIdFromDynamicObject(dynamic obj)
-    {
-        Type typeInfo = obj.GetType();
-        PropertyInfo idProperty = typeInfo.GetProperty("_id");
-
-        if (idProperty != null)
+        public static object GetIdFromDynAsObj(dynamic obj)
         {
-            return idProperty.GetValue(obj, null);
+            System.Type typeInfo = obj.GetType();
+            PropertyInfo idProperty = typeInfo.GetProperty("_id");
+
+            if (idProperty != null)
+            {
+                return idProperty.GetValue(obj, null);
+            }
+
+            return null;
         }
 
-        return null;
-    }
-}
         /// <summary>
         /// Get the id for when you don't have an object class
         /// </summary>
         /// <returns>A string</returns>
-        public static string GetIdFromDynamicObject(dynamic obj)
-    {
-        Type typeInfo = obj.GetType();
-        PropertyInfo idProperty = typeInfo.GetProperty("_id");
-
-        if (idProperty != null)
+        public static string GetIdFromDynAsStr(dynamic obj)
         {
-            string idValue = (string)idProperty.GetValue(obj, null);
-            return idValue;
-        }
+            System.Type typeInfo = obj.GetType();
+            PropertyInfo idProperty = typeInfo.GetProperty("_id");
 
-        return null;
-    }
-}
+            if (idProperty != null)
+            {
+                string idValue = (string)idProperty.GetValue(obj, null);
+                return idValue;
+            }
+
+            return null;
+        }
 
         public static List<LogMessage> GetLogs()
         {
