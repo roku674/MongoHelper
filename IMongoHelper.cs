@@ -80,7 +80,7 @@ namespace Optimization.Repository
         /// <param name="filter"></param>
         /// <param name="document"></param>
         /// <returns></returns>
-        Task<UpdateResult> ReplaceDocumentAsync<T>(string collectionName, FilterDefinition<T> filter, T document);
+        Task<ReplaceOneResult> ReplaceDocumentAsync<T>(string collectionName, FilterDefinition<T> filter, T document);
         /// <summary>
         /// Updates a document
         /// </summary>
