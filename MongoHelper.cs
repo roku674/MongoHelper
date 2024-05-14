@@ -1,10 +1,8 @@
 using System.Collections.Generic;
 using System.Reflection;
-using System.Security.AccessControl;
 using System.Threading.Tasks;
 //Copyright © 2023 Mandala Consulting, LLC MIT License
 //Created by Alexander Fields
-using MongoDB.Bson;
 using MongoDB.Driver;
 using Optimization.Logging;
 
