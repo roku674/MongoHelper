@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 //Copyright © 2023 Mandala Consulting, LLC MIT License
 //Created by Alexander Fields
 using MongoDB.Driver;
-using Optimization.Logging;
+using MC.Optimization.Logging;
 
 namespace Optimization.Repository
 {
