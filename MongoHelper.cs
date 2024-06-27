@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -13,7 +14,7 @@ namespace Optimization.Repository
     /// </summary>
     public class MongoHelper : IMongoHelper
     {
-        private static List<LogMessage> mongoLogs = new List<LogMessage>();
+        private static readonly ConcurrentQueue<LogMessage> mongoLogs = new ConcurrentQueue<LogMessage>();
         public static event System.EventHandler<LogMessageEventArgs> LogAdded;
         public static event System.EventHandler LogCleared;
 
@@ -181,7 +182,7 @@ namespace Optimization.Repository
 
         protected static void AddLog(LogMessage logMessage)
         {
-            mongoLogs.Add(logMessage);
+            mongoLogs.Enqueue(logMessage);
             LogAdded?.Invoke(null, new LogMessageEventArgs(logMessage));
         }
 
@@ -230,9 +231,9 @@ namespace Optimization.Repository
             return null;
         }
 
-        public static List<LogMessage> GetLogs()
+        public static IList<LogMessage> GetLogs()
         {
-            return mongoLogs;
+            return mongoLogs.ToArray();
         }
     }
 }
