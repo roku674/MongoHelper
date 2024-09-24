@@ -26,6 +26,11 @@ namespace Optimization.Repository
         /// default Constrcutor
         /// </summary>
         public MongoHelper() { }
+        
+        ~MongoHelper()
+        {
+            ClearLogs();
+        }
 
         /// <summary>
         /// Constructor that will get Database
