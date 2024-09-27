@@ -193,7 +193,7 @@ namespace Optimization.Repository
 
         public static void ClearLogs()
         {
-            mongoLogs.Clear();
+            mongoLogs?.Clear();
             LogCleared?.Invoke(null, System.EventArgs.Empty);
         }
 
